@@ -48,23 +48,38 @@ def calculate_demographic_data(print_data=True):
         salary_proportion_lower_education[">50K"] * 100, 1)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
-    # TODO: Q6
-    min_work_hours = None
+    # NOTE: SOLVED Q6
+    min_work_hours = df["hours-per-week"].min()
 
     # What percentage of the people who work the minimum number of hours per week have a salary of >50K?
-    # TODO: Q7
-    num_min_workers = None
+    # NOTE: SOLVED Q7
 
-    rich_percentage = None
+    # dunno why, no need actualy
+    num_min_workers = len(df[df["hours-per-week"] == min_work_hours])
+    df_min_workers = df[df["hours-per-week"] == min_work_hours]
+    rich_min_workers_ratio = df_min_workers["salary"].isin(
+        [">50K"]).value_counts(normalize=True)*100
+    # I don't like this solution :(
+    rich_percentage = round(rich_min_workers_ratio[True], 1)
 
     # What country has the highest percentage of people that earn >50K?
-    # TODO: Q8
-    highest_earning_country = None
-    highest_earning_country_percentage = None
+    # NOTE: SOLVED Q8
+    df_rich_ppl = df[df["salary"].isin([">50K"])]
+    df_rich_ppl_by_country = df_rich_ppl["native-country"].value_counts()
+    df_ppl_by_country = df["native-country"].value_counts()
+    # highest_earning_country = df_rich_ppl["native-country"].value_counts(
+    #     normalize=True).idxmax()
+    highest_earning_country = (
+        df_rich_ppl_by_country / df_ppl_by_country).idxmax()
+
+    highest_earning_country_percentage = round((
+        df_rich_ppl_by_country / df_ppl_by_country).max() * 100, 1)
 
     # Identify the most popular occupation for those who earn >50K in India.
     # TODO: Q9
-    top_IN_occupation = None
+    df_rich_indians = df_rich_ppl[df_rich_ppl["native-country"].isin([
+                                                                     "India"])]
+    top_IN_occupation = df_rich_indians["occupation"].value_counts().idxmax()
 
     # DO NOT MODIFY BELOW THIS LINE
 
