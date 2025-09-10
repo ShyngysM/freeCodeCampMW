@@ -6,53 +6,64 @@ def calculate_demographic_data(print_data=True):
     df = pd.read_csv("adult.data.csv")
 
     # How many of each race are represented in this dataset? This should be a Pandas series with race names as the index labels.
-    race_count = df["race"].count()
+    # NOTE: SOLVED Q1
+    race_count = df["race"].value_counts()
 
     # What is the average age of men?
-    # male = df[df["sex"] == "Male"]
-    # average_age_men = male["age"].mean()
-    average_age_men = df.loc[df["sex"] == "Male",
-                             "age"].mean()  # .loc [rows, cols]
+    # NOTE: SOLVED Q2
+    average_age_men = round(
+        df.loc[df["sex"] == "Male", "age"].mean(), 1)  # .loc [rows, cols]
+    # average_age_men = round(average_age_men, 1)
 
     # What is the percentage of people who have a Bachelor's degree?
     # value_counts It counts the frequency of unique values in a Series (a single column) normalize=True shows it in %
-    percentage_bachelors = df["education"].value_counts(normalize=True)[
-        "Bachelors"] * 100
+    # NOTE: SOLVED Q3
+    percentage_bachelors = round(df["education"].value_counts(normalize=True)[
+        "Bachelors"] * 100, 1)
 
     # What percentage of people with advanced education (`Bachelors`, `Masters`, or `Doctorate`) make more than 50K?
-    # What percentage of people without advanced education make more than 50K?
+    # NOTE: SOLVED Q4
 
-    # with and without `Bachelors`, `Masters`, or `Doctorate`
-    # next 2 lines are filtering original data frame into single columns for convinience
-    col_higher_education = df.loc[df["education"].isin(
-        ["Bachelors", "Masters", "Doctorate"]), "education"]
-    col_lower_education = df.loc[~df["education"].isin(
-        ["Bachelors", "Masters", "Doctorate"]), "education"]
-    # higher_education = col_higher_education.value_counts(normalize=True)
-    # lower_education = col_lower_education.value_counts(normalize=True)
-    # TODO:
-    higher_education = None
-    lower_education = None
+    # Filter only high educated
+    df_higher_education = df.loc[df["education"].isin(
+        ["Bachelors", "Masters", "Doctorate"]), :]
+    # calculate salary proportion for higher educated
+    salary_proportion_higher_education = df_higher_education["salary"].value_counts(
+        normalize=True)
     # percentage with salary >50K
+    higher_education_rich = round(
+        salary_proportion_higher_education[">50K"] * 100, 1)
 
-    # TODO:
-    higher_education_rich = df_higher_education.value_counts(normalize=True)[
-        "Bachelors" + "Masters"]
-    lower_education_rich = None
+    # What percentage of people without advanced education make more than 50K?
+    # NOTE: SOLVED Q5
+
+    # Filter only low educated
+    df_lower_education = df.loc[~df["education"].isin(
+        ["Bachelors", "Masters", "Doctorate"]), :]
+    # calculate salary proportion for lower educated
+    salary_proportion_lower_education = df_lower_education["salary"].value_counts(
+        normalize=True)
+    # percentage with salary >50K
+    lower_education_rich = round(
+        salary_proportion_lower_education[">50K"] * 100, 1)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
+    # TODO: Q6
     min_work_hours = None
 
     # What percentage of the people who work the minimum number of hours per week have a salary of >50K?
+    # TODO: Q7
     num_min_workers = None
 
     rich_percentage = None
 
     # What country has the highest percentage of people that earn >50K?
+    # TODO: Q8
     highest_earning_country = None
     highest_earning_country_percentage = None
 
     # Identify the most popular occupation for those who earn >50K in India.
+    # TODO: Q9
     top_IN_occupation = None
 
     # DO NOT MODIFY BELOW THIS LINE
